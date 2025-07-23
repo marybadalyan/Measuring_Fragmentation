@@ -8,7 +8,8 @@ This project provides a hands-on analysis of memory fragmentation in C++ applica
 
 When a program runs, it constantly requests and releases blocks of memory from the operating system's heap. Over time, this process can lead to inefficiencies where memory is wasted. This waste is called fragmentation, and it comes in two main types:
 
-### внутрішня фрагментація
+
+### Internal fragmentation
 
 **Internal fragmentation** occurs when the memory allocator provides a block of memory that is larger than the size requested by the application. The unused space *inside* that allocated block is wasted because it cannot be used by any other allocation.
 
