@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add the executable
 if(WIN32)
-    add_executable(main main_windows.cpp)
+    add_executable(main_windows main_windows.cpp)
 else()
-    add_executable(main main_linux.cpp)
+    add_executable(main_linux main_linux.cpp)
 endif()
