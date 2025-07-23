@@ -65,6 +65,14 @@ The C++ programs generate a `heap_fragmentation_stats.csv` file with the collect
 
 -----
 
+## Results
+
+```markdown
+![Fragmentation Analysis](custom_fragmentation_analysis.png)
+
+*Example output from the python script*
+```
+
 ## How to Run the Project
 
 Follow these steps to compile the analyzers, run the simulation, and generate the plots.
