@@ -10,8 +10,6 @@
 // Include malloc.h to define mallopt
 #include <malloc.h>
 
-// Define feature test macro for malloc_info
-#define _GNU_SOURCE
 
 // Data structure to hold all the metrics we collect at a single point in time.
 // This structure is identical to the Windows version.
