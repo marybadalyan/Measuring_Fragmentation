@@ -84,10 +84,10 @@ jobs:
             extension=".exe"
           else
             executable="main_linux"
-            bin_dir="."
+            bin_dir=""
             extension=""
           fi
-          exe_path="$bin_dir$executable$extension"
+          exe_path="$bin_dir/$executable$extension"
 
           if [ -f "$exe_path" ]; then
             echo "Running $exe_path"
