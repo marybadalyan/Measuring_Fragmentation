@@ -79,20 +79,15 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-            executable="main_windows"
-            bin_dir="${{ matrix.build_type }}"
-            extension=".exe"
+            executable_name="${{ matrix.build_type }}/main_windows.exe"
           else
-            executable="main_linux"
-            bin_dir=""
-            extension=""
+            executable_name="main_linux"
           fi
-          exe_path="$bin_dir/$executable$extension"
 
-          if [ -f "$exe_path" ]; then
-            echo "Running $exe_path"
-            "./$exe_path"
+          if [ -f "$executable_name" ]; then
+            echo "Running $executable_name"
+            "./$executable_name"
           else
-            echo "Executable not found: $(pwd)/$exe_path"
+            echo "Executable not found: $(pwd)/$executable_name"
             exit 1
           fi
