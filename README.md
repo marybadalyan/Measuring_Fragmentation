@@ -67,11 +67,7 @@ The C++ programs generate a `heap_fragmentation_stats.csv` file with the collect
 
 ## Results
 
-```markdown
-![Fragmentation Analysis](custom_fragmentation_analysis.png)
-
-*Example output from the python script*
-```
+<img src="custom_fragmentation_analysis.png" alt="Fragmentation Analysis" width="500">
 
 ## How to Run the Project
 
