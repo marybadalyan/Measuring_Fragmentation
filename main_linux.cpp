@@ -28,30 +28,44 @@ struct HeapStats {
  * This is the Linux equivalent of the GetHeapInfo function that used HeapWalk.
  * @return A pair containing {totalFreeMemory, largestFreeBlock}.
  */
+// Corrected function to accurately parse free chunks
 std::pair<size_t, size_t> getHeapInfo() {
-    // malloc_info() prints its XML data to a string stream.
-    std::stringstream ss;
-    // The '0' argument specifies the format version.
-    malloc_info(0, ss);
-    std::string info = ss.str();
+    std::vector<char> buffer(65536, 0); // 64KB buffer
 
+    FILE* stream = fmemopen(buffer.data(), buffer.size(), "w");
+    if (!stream) {
+        perror("fmemopen failed");
+        return {0, 0};
+    }
+
+    malloc_info(0, stream);
+    fclose(stream);
+
+    std::string info(buffer.data());
     size_t totalFree = 0;
     size_t biggestFree = 0;
 
     try {
-        // We use a regular expression to find all free chunks in the main arena.
-        // The XML output lists free chunks like: <chunk size="123456">
-        std::regex chunk_regex("<chunk size=\"(\\d+)\">");
-        auto chunks_begin = std::sregex_iterator(info.begin(), info.end(), chunk_regex);
-        auto chunks_end = std::sregex_iterator();
+        // First, find the main heap's free block section.
+        // We look for the content between <free> and </free>.
+        size_t free_start = info.find("<free>");
+        size_t free_end = info.find("</free>");
 
-        for (std::sregex_iterator i = chunks_begin; i != chunks_end; ++i) {
-            std::smatch match = *i;
-            // The size is in the first capture group (index 1).
-            size_t chunkSize = std::stoul(match[1].str());
-            totalFree += chunkSize;
-            if (chunkSize > biggestFree) {
-                biggestFree = chunkSize;
+        if (free_start != std::string::npos && free_end != std::string::npos) {
+            std::string free_section = info.substr(free_start, free_end - free_start);
+
+            // Now, search for chunks only within the free section.
+            std::regex chunk_regex("<chunk size=\"(\\d+)\">");
+            auto chunks_begin = std::sregex_iterator(free_section.begin(), free_section.end(), chunk_regex);
+            auto chunks_end = std::sregex_iterator();
+
+            for (std::sregex_iterator i = chunks_begin; i != chunks_end; ++i) {
+                std::smatch match = *i;
+                size_t chunkSize = std::stoul(match[1].str());
+                totalFree += chunkSize;
+                if (chunkSize > biggestFree) {
+                    biggestFree = chunkSize;
+                }
             }
         }
     } catch (const std::regex_error& e) {
